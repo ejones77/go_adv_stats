@@ -65,22 +65,22 @@ After performing the test on my local machine, these were my results:
 For 1000 samples:
 Go is +Inf times faster than R.
 Go uses 152.82 times less memory than R.
-R cost: $0.0000
+R cost: $0.0560
 Go cost: $0.0000
 Cost savings with Go: $0.0560
 
 For 100000 samples:
 Go is 38.12 times faster than R.
 Go uses 12.46 times less memory than R.
-R cost: $0.0000
-Go cost: $0.0000
+R cost: $2.8467
+Go cost: $0.0747
 Cost savings with Go: $2.7720
 
 For 1000000 samples:
 Go is 50.23 times faster than R.
 Go uses 4.03 times less memory than R.
-R cost: $0.0001
-Go cost: $0.0000
+R cost: $31.8780
+Go cost: $0.6347
 Cost savings with Go: $31.2433
 ```
 
@@ -88,4 +88,4 @@ The "infinitely faster" result for 1000 samples was unexpected but checks out be
 
 Go maintains an impressive performance boost over R in both speed and memory usage. Go's performance boost strengthens as the scale grows, but Go is less of an improvement in memory usage at scale. Still, it's impressive to be 4x more efficient with 1 million samples. 
 
-Because Go's performance boost grows exponentially, so too do the cloud savings costs. The bigger the data you need to process, the more appealing Go is as an alterative for data processing. 
+Because Go's performance boost grows exponentially, so too do the cloud savings costs. You'll spend $30 with R before you spend a single dollar with Go. The bigger the data you need to process, the more appealing Go is as an alterative.  

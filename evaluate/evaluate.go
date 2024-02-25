@@ -50,8 +50,8 @@ func main() {
 		rCost := (rResult.ProcessingTime / 3600000) * hourlyRate
 		goCost := (goResult.ProcessingTime / 3600000) * hourlyRate
 
-		fmt.Printf("R cost: $%.4f\n", rCost)
-		fmt.Printf("Go cost: $%.4f\n", goCost)
+		fmt.Printf("R cost: $%.4f\n", rCost*float64(numRuns))
+		fmt.Printf("Go cost: $%.4f\n", goCost*float64(numRuns))
 
 		costSavings := (rCost - goCost) * float64(numRuns)
 		fmt.Printf("Cost savings with Go: $%.4f\n", costSavings)
