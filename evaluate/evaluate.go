@@ -4,38 +4,40 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"time"
 )
 
 type Result struct {
-	Language       string `json:"language"`
-	NumSamples     int    `json:"num_samples"`
-	ProcessingTime string `json:"processing_time"`
-	MemoryUsage    uint64 `json:"memory_usage"`
+	Language       string  `json:"language"`
+	NumSamples     int     `json:"num_samples"`
+	ProcessingTime float64 `json:"processing_time"`
+	MemoryUsage    uint64  `json:"memory_usage"`
 }
 
 func main() {
-	rResults := readResults("results_R.json")
-	goResults := readResults("results_Go.json")
+	rResults := readResults("evaluate/results_R.json")
+	goResults := readResults("evaluate/results_go.json")
 
 	for i, rResult := range rResults {
 		goResult := goResults[i]
 
-		rDuration, _ := time.ParseDuration(rResult.ProcessingTime)
-		goDuration, _ := time.ParseDuration(goResult.ProcessingTime)
-
 		fmt.Printf("For %d samples:\n", rResult.NumSamples)
 
-		if rDuration < goDuration {
-			fmt.Println("R was faster.")
+		timeRatio := rResult.ProcessingTime / goResult.ProcessingTime
+		if rResult.ProcessingTime < goResult.ProcessingTime {
+			fmt.Printf("R is %.2f times faster than Go.\n", timeRatio)
+		} else if rResult.ProcessingTime > goResult.ProcessingTime {
+			fmt.Printf("Go is %.2f times faster than R.\n", timeRatio)
 		} else {
-			fmt.Println("Go was faster.")
+			fmt.Println("R and Go had the same processing time.")
 		}
 
+		memRatio := float64(rResult.MemoryUsage) / float64(goResult.MemoryUsage)
 		if rResult.MemoryUsage < goResult.MemoryUsage {
-			fmt.Println("R used less memory.")
+			fmt.Printf("R uses %.2f times less memory than Go.\n", memRatio)
+		} else if rResult.MemoryUsage > goResult.MemoryUsage {
+			fmt.Printf("Go uses %.2f times less memory than R.\n", memRatio)
 		} else {
-			fmt.Println("Go used less memory.")
+			fmt.Println("R and Go used the same amount of memory.")
 		}
 
 		fmt.Println()
@@ -47,6 +49,10 @@ func readResults(filename string) []Result {
 
 	var results []Result
 	json.Unmarshal(file, &results)
+
+	for _, result := range results {
+		fmt.Printf("Result: %+v\n", result)
+	}
 
 	return results
 }

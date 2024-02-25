@@ -13,14 +13,15 @@ results <- list()
 for (numSamples in sampleSizes) {
   start <- Sys.time()
   bootResult <- boot(data, statistic, R = numSamples)
-  elapsed <- Sys.time() - start
+  elapsed <- difftime(Sys.time(), start, units = "secs") * 1000
   memUsage <- mem_used()
   
   result <- list(
-    language = "R",
-    num_samples = numSamples,
-    processing_time = as.character(elapsed),
-    memory_usage = as.numeric(memUsage)
+    language = unbox("R"),
+    num_samples = unbox(numSamples),
+    # Go rounds down when computing milliseconds, we should do the same
+    processing_time = unbox(floor(as.numeric(elapsed))),
+    memory_usage = unbox(as.numeric(memUsage))
   )
   
   results[[length(results) + 1]] <- result
@@ -29,4 +30,4 @@ for (numSamples in sampleSizes) {
   print(paste("Standard deviation of bootstrap samples:", sd(bootResult$t)))
 }
 
-write_json(results, "results_R.json")
+write_json(results, "evaluate/results_R.json")

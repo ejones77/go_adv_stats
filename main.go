@@ -12,10 +12,10 @@ import (
 )
 
 type Result struct {
-	Language       string `json:"language"`
-	NumSamples     int    `json:"num_samples"`
-	ProcessingTime string `json:"processing_time"`
-	MemoryUsage    uint64 `json:"memory_usage"`
+	Language       string  `json:"language"`
+	NumSamples     int     `json:"num_samples"`
+	ProcessingTime float64 `json:"processing_time"`
+	MemoryUsage    uint64  `json:"memory_usage"`
 }
 
 func bootstrap(data []float64, numSamples int) []float64 {
@@ -50,7 +50,7 @@ func main() {
 		result := Result{
 			Language:       "Go",
 			NumSamples:     numSamples,
-			ProcessingTime: elapsed.String(),
+			ProcessingTime: float64(elapsed.Milliseconds()),
 			MemoryUsage:    memStats.Alloc,
 		}
 
@@ -62,7 +62,7 @@ func main() {
 		fmt.Printf("For %d samples, Mean: %v, StdDev: %v\n", numSamples, mean, stdev)
 	}
 
-	file, _ := os.Create("results_go.json")
+	file, _ := os.Create("evaluate/results_go.json")
 	defer file.Close()
 
 	json.NewEncoder(file).Encode(results)
