@@ -17,6 +17,12 @@ func main() {
 	rResults := readResults("evaluate/results_R.json")
 	goResults := readResults("evaluate/results_go.json")
 
+	// using AWS EC2 t4g.medium as an example
+	hourlyRate := 0.0336
+
+	// scaled up threshold of how many times the program is run
+	numRuns := 500000
+
 	for i, rResult := range rResults {
 		goResult := goResults[i]
 
@@ -40,6 +46,16 @@ func main() {
 			fmt.Println("R and Go used the same amount of memory.")
 		}
 
+		// Converting ms to hours
+		rCost := (rResult.ProcessingTime / 3600000) * hourlyRate
+		goCost := (goResult.ProcessingTime / 3600000) * hourlyRate
+
+		fmt.Printf("R cost: $%.4f\n", rCost)
+		fmt.Printf("Go cost: $%.4f\n", goCost)
+
+		costSavings := (rCost - goCost) * float64(numRuns)
+		fmt.Printf("Cost savings with Go: $%.4f\n", costSavings)
+
 		fmt.Println()
 	}
 }
@@ -49,10 +65,6 @@ func readResults(filename string) []Result {
 
 	var results []Result
 	json.Unmarshal(file, &results)
-
-	for _, result := range results {
-		fmt.Printf("Result: %+v\n", result)
-	}
 
 	return results
 }
